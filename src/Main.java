@@ -38,7 +38,7 @@ public class Main extends Application {
         primaryStage.show();
         
         
-        Timeline animation = new Timeline(new KeyFrame(Duration.millis(5), e -> {
+        Timeline animation = new Timeline(new KeyFrame(Duration.millis(20), e -> {
 			surcafe.draw();
 		}));
 	animation.setCycleCount(Timeline.INDEFINITE);

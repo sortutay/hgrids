@@ -1,5 +1,6 @@
 
 import java.util.Random;
+import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -16,17 +17,24 @@ import javafx.scene.shape.Rectangle;
  */
 public class AABB extends Pane{
 
+    final double dt = 1.5;
+    
     private double surfaceWidth;
     private double surfaceHeight;
     
     
-    private double x;
-    private double y;
+   
     private double width;
     private double height;
     
-    private double velocityX;
-    private double velocityY;
+    private Color color;
+    
+    private boolean collided;
+    
+    private Point2D position;   //position x y
+
+    
+    private Point2D velocity;   // velocityX velocityY
     
     
     public AABB(double width, double height){
@@ -37,27 +45,38 @@ public class AABB extends Pane{
         this.width = 50;
         this.height = 70;
         
+        color = Color.BLUE;
+        
+        
         Random rnd = new Random();
         
-        this.x = (rnd.nextDouble()*surfaceWidth)+1;
+        double x = (rnd.nextDouble()*surfaceWidth)+1;
         
-        if (this.x+this.width>=surfaceWidth){
-            this.x = surfaceWidth-this.width - 1;
+        if (x+this.width>=surfaceWidth){
+            x = surfaceWidth-this.width - 1;
         }
         
         
         
-        this.y = (rnd.nextDouble()*surfaceHeight);
+         double y = (rnd.nextDouble()*surfaceHeight);
         
-        if (this.y+this.height>=surfaceHeight){
-            this.y = surfaceHeight-this.height - 1;
+        if (y+this.height>=surfaceHeight){
+            y = surfaceHeight-this.height - 1;
         }
         
+        position = new Point2D(x, y);
         
-        this.velocityX = rnd.nextDouble();
-        this.velocityY = rnd.nextDouble();
+        
+        double velocityX = rnd.nextDouble();
+        double velocityY = rnd.nextDouble();
+        
+        velocity = new Point2D(velocityX, velocityY);
         
     
+    }
+    
+    public void changeColor(Color c){
+        this.color = c;
     }
     
     
@@ -65,8 +84,8 @@ public class AABB extends Pane{
     public void draw(){
         getChildren().clear();
         
-        Rectangle rectangle = new Rectangle(this.x,this.y,this.width,this.height);
-        rectangle.setFill(Color.BLUE);
+        Rectangle rectangle = new Rectangle(position.getX(),position.getY(),this.width,this.height);
+        rectangle.setFill(this.color);
         
         getChildren().add(rectangle);
         
@@ -75,26 +94,26 @@ public class AABB extends Pane{
     public void update(){
         
         
+        position = position.add(velocity.multiply(dt));
         
-        this.x += velocityX;
-        this.y += velocityY;
         
-        if(this.x <= 0 || (this.x + this.width) >= this.surfaceWidth ){
+        if(position.getX() <= 0 || (position.getX() + this.width) >= this.surfaceWidth ){
             negateVelocityX();
         }
         
-        if(this.y <= 0 || (this.y + this.height) >= this.surfaceHeight ){
+        if(position.getY() <= 0 || (position.getY() + this.height) >= this.surfaceHeight ){
             negateVelocityY();
         }
+        
         
     }
     
     public void negateVelocityX(){
-        this.velocityX *= (-1);
+        velocity = new Point2D(velocity.getX()*(-1), velocity.getY());
     }
     
     public void negateVelocityY(){
-        this.velocityY *= (-1);
+        velocity = new Point2D(velocity.getX(), velocity.getY()*(-1));
     }
     
     
@@ -102,21 +121,7 @@ public class AABB extends Pane{
     
     
     
-    public double getX() {
-        return x;
-    }
-
-    public void setX(double x) {
-        this.x = x;
-    }
-
-    public double getY() {
-        return y;
-    }
-
-    public void setY(double y) {
-        this.y = y;
-    }
+    
 
     public double getW() {
         return width;
@@ -135,22 +140,24 @@ public class AABB extends Pane{
     public void setH(double height) {
         this.height = height;
     }
-
-    public double getVelocityX() {
-        return velocityX;
+    
+    public Point2D getPosition() {
+        return position;
     }
 
-    public void setVelocityX(double velocityX) {
-        this.velocityX = velocityX;
+    public void setPosition(Point2D position) {
+        this.position = position;
     }
 
-    public double getVelocityY() {
-        return velocityY;
+    public Point2D getVelocity() {
+        return velocity;
     }
 
-    public void setVelocityY(double velocityY) {
-        this.velocityY = velocityY;
+    public void setVelocity(Point2D velocity) {
+        this.velocity = velocity;
     }
+
+    
     
     
     

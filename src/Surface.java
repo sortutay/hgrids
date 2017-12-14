@@ -2,6 +2,7 @@
 import java.util.ArrayList;
 import java.util.Random;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -38,7 +39,7 @@ public class Surface extends Pane{
         
         Random rnd = new Random();
         
-        int n = rnd.nextInt(10)+1;
+        int n = rnd.nextInt(20)+10;
         
         for (int i = 0; i < n; i++){
             AABB box = new AABB(this.w,this.h);
@@ -60,64 +61,31 @@ public class Surface extends Pane{
     public void update(){
         
         for (int i = 0; i<boxes.size(); i++){
+            AABB b1 = boxes.get(i);
+            boolean collision = false;
             for (int j = 0; j<boxes.size(); j++){
                 if (i != j){
                     
-                    AABB b1 = boxes.get(i);
                     AABB b2 = boxes.get(j);
                     
-                    if (b1.getX()+b1.getW() >= b2.getX() && b1.getX()+b1.getW() <= b2.getX()+b2.getW()){
-                        if (b1.getY() >= b2.getY() && b1.getY() <= b2.getY()+b2.getH() ||
-                                b1.getY()+b1.getH() >= b2.getY() && b1.getY()+b1.getH() <= b2.getY()+b2.getH()){
-                            b1.negateVelocityX();
-                           // b2.negateVelocityX();
-                            //b1.negateVelocityY();
-                           
-                            System.out.println("prva");
-                            break;
-                            
-                        }
-                        
+                    if ( b1.getPosition().getX() <= b2.getPosition().getX()+b2.getW() &&
+                            b1.getPosition().getX()+b1.getW() >= b2.getPosition().getX() &&
+                            b1.getPosition().getY() <= b2.getPosition().getY()+b2.getH() &&
+                            b1.getPosition().getY()+b1.getH() >= b2.getPosition().getY()){
+                        b1.changeColor(Color.RED);
+                        collision = true;
                     }
                     
-                    else if (b1.getY()+b1.getH() >= b2.getY() && b1.getY()+b1.getH() <= b2.getY()+b2.getH()){
-                        if (b1.getX() >= b2.getX() && b1.getX() <= b2.getX()+b2.getW() ||
-                                b1.getX()+b1.getW() >= b2.getX() && b1.getX()+b1.getW() <= b2.getX()+b2.getW()){
-                            b1.negateVelocityY();
-                           // b2.negateVelocityY();
-                           break;
-                           
-                            
-                        }
-                    }
                     
-                    else if (b1.getX() >= b2.getX() && b1.getX() <= b2.getX()+b2.getW()){
-                        if (b1.getY() >= b2.getY() && b1.getY() <= b2.getY()+b2.getH() ||
-                                b1.getY()+b1.getH() >= b2.getY() && b1.getY()+b1.getH() <= b2.getY()+b2.getH()){
-                            b1.negateVelocityX();
-                           // b2.negateVelocityX();
-                            //b1.negateVelocityY();
-                            break;
-                            
-                            
-                        }
-                        
-                    }
-                    
-                    else if (b1.getY() >= b2.getY() && b1.getY()<= b2.getY()+b2.getH()){
-                        if (b1.getX() >= b2.getX() && b1.getX() <= b2.getX()+b2.getW() ||
-                                b1.getX()+b1.getW() >= b2.getX() && b1.getX()+b1.getW() <= b2.getX()+b2.getW()){
-                            b1.negateVelocityY();
-                           // b2.negateVelocityY();
-                           
-                           break;
-                            
-                        }
-                    }
                     
                     
                 }
+                
             }
+            if (!collision){
+                b1.changeColor(Color.BLUE);
+            }
+            
         }
     }
     
