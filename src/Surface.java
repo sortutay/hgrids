@@ -39,7 +39,7 @@ public class Surface extends Pane{
         
         Random rnd = new Random();
         
-        int n = rnd.nextInt(20)+10;
+        int n = rnd.nextInt(20)+20;
         
         for (int i = 0; i < n; i++){
             AABB box = new AABB(this.w,this.h);

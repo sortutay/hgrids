@@ -33,7 +33,7 @@ public class Main extends Application {
         
         Scene scene = new Scene(surcafe, surcafe.getW(), surcafe.getH());
         
-        primaryStage.setTitle("Hello World!");
+        primaryStage.setTitle("Hierarchical Grids");
         primaryStage.setScene(scene);
         primaryStage.show();
         
