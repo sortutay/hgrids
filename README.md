@@ -1,4 +1,5 @@
-C06 - Hierarchical grids
+#C06 - Hierarchical grids
+
 Scene: 2d space, with n random positioned AABB boxes within some boundary, set initial velocity random
 Implement simple coherent motion
 Integrate positions with explicit Euler
