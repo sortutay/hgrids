@@ -29,7 +29,7 @@ public class AABB extends Pane{
     
     private Color color;
     
-    private boolean collided;
+    
     
     private Point2D position;   //position x y
 
@@ -38,17 +38,19 @@ public class AABB extends Pane{
     
     
     public AABB(double width, double height){
+        Random rnd = new Random();
         
         this.surfaceWidth = width;
         this.surfaceHeight = height;
         
-        this.width = 50;
-        this.height = 70;
+        
+        this.width = 20+rnd.nextInt(70);
+        this.height = 20+rnd.nextInt(70);
         
         color = Color.BLUE;
         
         
-        Random rnd = new Random();
+        
         
         double x = (rnd.nextDouble()*surfaceWidth)+1;
         
