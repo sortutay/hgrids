@@ -27,6 +27,8 @@ public class Main extends Application {
     
     @Override
     public void start(Stage primaryStage) {
+        
+        
        
         
         Surface surcafe = new Surface(1500,800);

@@ -16,7 +16,7 @@ import javafx.scene.shape.Rectangle;
  * @author Stefan
  */
 public class AABB extends Pane{
-
+    private int id;
     final double dt = 1.5;
     
     private double surfaceWidth;
@@ -37,7 +37,7 @@ public class AABB extends Pane{
     private Point2D velocity;   // velocityX velocityY
     
     
-    public AABB(double width, double height){
+    public AABB(int id, double width, double height){
         Random rnd = new Random();
         
         this.surfaceWidth = width;
@@ -122,6 +122,9 @@ public class AABB extends Pane{
     
     
     
+    public int getID() {
+        return id;
+    }
     
     
 

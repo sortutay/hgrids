@@ -42,7 +42,7 @@ public class Surface extends Pane{
         int n = rnd.nextInt(20)+20;
         
         for (int i = 0; i < n; i++){
-            AABB box = new AABB(this.w,this.h);
+            AABB box = new AABB(i, this.w,this.h);
             boxes.add(box);
         }
     }
@@ -74,10 +74,7 @@ public class Surface extends Pane{
                             b1.getPosition().getY()+b1.getH() >= b2.getPosition().getY()){
                         b1.changeColor(Color.RED);
                         collision = true;
-                    }
-                    
-                    
-                    
+                    }                   
                     
                 }
                 
