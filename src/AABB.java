@@ -1,19 +1,18 @@
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Random;
 import javafx.geometry.Point2D;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
 /**
  *
- * @author Stefan
+ * Represents one AABB box
  */
 public class AABB extends Pane{
     private int id;
@@ -21,6 +20,9 @@ public class AABB extends Pane{
     
     private double surfaceWidth;
     private double surfaceHeight;
+    
+    private HashMap<Grid, HashSet<Integer>> gridPositions;
+
     
     
    
@@ -36,7 +38,9 @@ public class AABB extends Pane{
     
     private Point2D velocity;   // velocityX velocityY
     
-    
+    /*
+    Initialization of AABB box
+    */
     public AABB(int id, double width, double height){
         Random rnd = new Random();
         
@@ -44,8 +48,8 @@ public class AABB extends Pane{
         this.surfaceHeight = height;
         
         
-        this.width = 20+rnd.nextInt(70);
-        this.height = 20+rnd.nextInt(70);
+        this.width = 20+rnd.nextInt(100);
+        this.height = 20+rnd.nextInt(100);
         
         color = Color.BLUE;
         
@@ -74,25 +78,36 @@ public class AABB extends Pane{
         
         velocity = new Point2D(velocityX, velocityY);
         
-    
+        gridPositions = new HashMap<>();
+        this.id = id;
     }
     
+    /*
+    Changes color of AABB box
+    */
     public void changeColor(Color c){
         this.color = c;
     }
     
     
-    
+    /*
+    Draws AABB as rectangle into Canvas
+    */
     public void draw(){
         getChildren().clear();
         
         Rectangle rectangle = new Rectangle(position.getX(),position.getY(),this.width,this.height);
         rectangle.setFill(this.color);
+        Text t = new Text(position.getX(),position.getY(), id+" "+width+" "+height);
+        t.setFont(new Font(20));
         
-        getChildren().add(rectangle);
+        getChildren().addAll(rectangle,t);
         
     }
     
+    /*
+    Updates position of AABB box in Canvas
+    */
     public void update(){
         
         
@@ -110,58 +125,70 @@ public class AABB extends Pane{
         
     }
     
+    /*
+    Negates velocity of X axis
+    */
     public void negateVelocityX(){
         velocity = new Point2D(velocity.getX()*(-1), velocity.getY());
     }
-    
+    /*
+    Negates velocity of Y axis
+    */
     public void negateVelocityY(){
         velocity = new Point2D(velocity.getX(), velocity.getY()*(-1));
     }
     
+    /*
+    Adds position of AABB box in particular grid
+    */
+    public void addGridPosition(Grid g, int hashPos){
+        if (gridPositions.get(g) == null){
+            gridPositions.put(g, new HashSet<Integer>());
+        }
+        gridPositions.get(g).add(hashPos);
+    }
     
     
-    
-    
+    /*
+    Getters and setters of private attributes
+    */
     public int getID() {
         return id;
     }
-    
-    
-
     public double getW() {
         return width;
     }
-
-    
     public void setW(double width) {
         this.width = width;
     }
-
-    
     public double getH() {
         return height;
     }
-
     public void setH(double height) {
         this.height = height;
     }
-    
     public Point2D getPosition() {
         return position;
     }
-
     public void setPosition(Point2D position) {
         this.position = position;
     }
-
     public Point2D getVelocity() {
         return velocity;
     }
-
     public void setVelocity(Point2D velocity) {
         this.velocity = velocity;
     }
-
+    public HashMap<Grid, HashSet<Integer>> getGridPositions() {
+            return gridPositions;
+    }
+    public void setGridPositions(HashMap<Grid, HashSet<Integer>> gridPositions) {
+        this.gridPositions = gridPositions;
+    }
+    
+    public String toString(){
+        return this.id+"";
+    }
     
     
     

@@ -1,18 +1,14 @@
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Random;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 
 /**
- *
- * @author Stefan
+ * Handles visualization and animation of all objects in Canvas
  */
 public class Surface extends Pane{
     
@@ -20,35 +16,52 @@ public class Surface extends Pane{
     private double h;   //height
     
     private ArrayList<AABB> boxes;
+    private HashMap<Integer, AABB> boxesMap;
+    private GridController gridController;
     
-    
-    
+    /*
+    Initialization of Surface class
+    */
     public Surface(double ww, double hh){
         this.w = ww;
         this.h = hh;
         
         boxes = new ArrayList<>();
+        boxesMap = new HashMap<>();
+        
         
         setBoundingBoxes();
+        
+        gridController = new GridController(boxes,boxesMap, w, h);
         
     }
 
     
-    
+    /*
+    Sets n random positioned AABB boxes with some boundary and velocity
+    */
     private void setBoundingBoxes(){
         
         Random rnd = new Random();
         
         int n = rnd.nextInt(20)+20;
-        
+        //int n = 10;
         for (int i = 0; i < n; i++){
+            System.out.println(i);
             AABB box = new AABB(i, this.w,this.h);
             boxes.add(box);
+            boxesMap.put(i, box);
         }
+        PairManagement.getInstance(n);
+        System.out.println(boxesMap);
     }
     
+    /*
+    Draws all objects into Canvas
+    */
     public void draw(){
-        update();
+        //naiveCollisionDetection();
+        hierarchicalGridBroadPhase();
         getChildren().clear();
         
         for (AABB box:boxes){
@@ -58,7 +71,16 @@ public class Surface extends Pane{
         }
     } 
     
-    public void update(){
+    /*
+    Implementation of Hierarchical grid broad phase algorithm
+    */
+    public void hierarchicalGridBroadPhase(){
+        gridController.updateBoxes();
+    }
+    /*
+    Implementation of Naive n^2 broad phase collision detection  algorithm
+    */
+    public void naiveCollisionDetection(){
         
         for (int i = 0; i<boxes.size(); i++){
             AABB b1 = boxes.get(i);
@@ -87,6 +109,9 @@ public class Surface extends Pane{
     }
     
     
+    /*
+    Getters and Setters of private attributes weight and height of Surface 
+    */
     public double getW() {
         return w;
     }

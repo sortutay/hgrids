@@ -1,12 +1,9 @@
 
-import com.sun.javafx.scene.layout.region.Margins;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.HashSet;
 import javafx.geometry.Point2D;
 
 /**
- *
- * @author Stefan
+ * Represents one grid 
  */
 public class Grid {
     
@@ -17,7 +14,9 @@ public class Grid {
     
     private Bucket[] cells;
     
-    
+    /*
+    Initialization of Grid class
+    */
     public Grid(double w, double h, int c){
         this.cellSize = c;
         
@@ -31,51 +30,92 @@ public class Grid {
         
     }
     
-    private int hash(double[] point) {
-        return (((int)point[0]*1103) ^ ((int)point[1]*1567)) % cells.length; 
-    }
-    
-    private void createBucket(int id) {
-        if (cells[id] == null){
-            cells[id] = new Bucket();
-        }
-    }
-    
-    public void add(AABB aabb) {
+    /*
+    Checks if AABB box fits into cell of grid
+    */
+    public boolean fit(AABB aabb){
         if (aabb.getW() > cellSize || aabb.getH() > cellSize) {
-            System.out.println("AABB with id "+aabb.getID()+ "in grid " +cellSize +" is too big");
-            return;
+            
+            return false;
         }
+        return true;
+    }
+    
+    /*
+    Adds AABB box into grid
+    */
+    public void add(AABB aabb, String type) {
+        
         Point2D position = aabb.getPosition();
         double[] leftUpperCell = {position.getX() / cellSize, position.getY() / cellSize};
         double[] leftLowerCell = {position.getX() / cellSize, (position.getY()+aabb.getH()) / cellSize};
         double[] rightUpperCell = {(position.getX()+aabb.getW()) / cellSize, position.getY() / cellSize};
         double[] rightLowerCell = {(position.getX()+aabb.getW()) / cellSize, (position.getY()+aabb.getH()) / cellSize};
         
-        int leftUpperHash = hash(leftUpperCell);
-        int leftLowerHash = hash(leftLowerCell);
-        int rightUpperHash = hash(rightUpperCell);
-        int rightLowerHash = hash(rightLowerCell); 
+        HashSet<Integer> pointsHash = new HashSet<Integer>();
         
-        createBucket(leftUpperHash);
-        createBucket(leftLowerHash);
-        createBucket(rightUpperHash);
-        createBucket(rightLowerHash);
+        pointsHash.add(hash(leftUpperCell));
+        pointsHash.add(hash(leftLowerCell));
+        pointsHash.add(hash(rightUpperCell));
+        pointsHash.add(hash(rightLowerCell));
         
-        cells[leftUpperHash].add(aabb.getID());
-        cells[leftLowerHash].add(aabb.getID());
-        cells[rightUpperHash].add(aabb.getID());
-        cells[rightLowerHash].add(aabb.getID());  
+        
+        
+        
+        for(Integer hashId:pointsHash){
+            createBucket(hashId);
+            if(type.equals("regular")){
+                cells[hashId].addRegular(aabb.getID());
+                cells[hashId].reportRegular(aabb.getID());
+            }
+            else{
+                cells[hashId].addBold(aabb.getID());
+                cells[hashId].reportBold(aabb.getID());
+
+            }
+            aabb.addGridPosition(this, hashId);
+        }
+        
         
     }
     
+    /*
+    Returns bucket of one cell from grid
+    */
+    public Bucket getBucket(int id) {
+        return cells[id];
+    }    
+    
+    /*
+    Function to hash position of cell to array
+    */
+    private int hash(double[] point) {
+        return (((int)point[0]*1103) ^ ((int)point[1]*1567)) % cells.length; 
+    }
+    
+    /*
+    Creates bucket to handle hash collisions in one cell of grid
+    */
+    private void createBucket(int id) {
+        if (cells[id] == null){
+            cells[id] = new Bucket();
+        }
+    }
+    
+    
+  
+    
+    @Override
     public String toString() {
-        String result = "";
+        String result = "GRID CELL SIZE "+ cellSize+" [";
         for (int i = 0; i < cells.length; i++) {
-            result += cells[i].toString() + " ";
+            if (cells[i] != null){
+                result+=cells[i]+"\n";
+            }
+            
             
         }
-        return result;
+        return result+"]";
     }
     
 }
