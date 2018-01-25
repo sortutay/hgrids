@@ -1,9 +1,14 @@
 
+import java.awt.BorderLayout;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Random;
+import java.util.Timer;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Line;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 
 
 
@@ -19,6 +24,9 @@ public class Surface extends Pane{
     private HashMap<Integer, AABB> boxesMap;
     private GridController gridController;
     
+    private Text hierarchicalResult;
+    private Text naiveResult;
+    
     /*
     Initialization of Surface class
     */
@@ -28,6 +36,17 @@ public class Surface extends Pane{
         
         boxes = new ArrayList<>();
         boxesMap = new HashMap<>();
+        
+        hierarchicalResult = new Text();
+        hierarchicalResult.setX(10);
+        hierarchicalResult.setY(720);
+        hierarchicalResult.setFont(new Font(20));
+        
+        
+        naiveResult = new Text();
+        naiveResult.setX(10);
+        naiveResult.setY(750);
+        naiveResult.setFont(new Font(20));
         
         
         setBoundingBoxes();
@@ -44,7 +63,7 @@ public class Surface extends Pane{
         
         Random rnd = new Random();
         
-        int n = rnd.nextInt(20)+20;
+        int n = rnd.nextInt(20)+5;
         //int n = 10;
         for (int i = 0; i < n; i++){
             System.out.println(i);
@@ -60,33 +79,48 @@ public class Surface extends Pane{
     Draws all objects into Canvas
     */
     public void draw(){
-        //naiveCollisionDetection();
-        hierarchicalGridBroadPhase();
         getChildren().clear();
+        
+        naiveCollisionDetection();
+        
+        hierarchicalGridBroadPhase();
+        
+        
         
         for (AABB box:boxes){
             box.draw();
             box.update();
             getChildren().add(box);
         }
+        
+        Line line = new Line();
+        line.setStartX(0);
+        line.setEndX(1500);
+        line.setStartY(700);
+        line.setEndY(700);
+        
+        getChildren().addAll(hierarchicalResult,naiveResult,line);
     } 
     
     /*
     Implementation of Hierarchical grid broad phase algorithm
     */
     public void hierarchicalGridBroadPhase(){
-        gridController.updateBoxes();
+        
+        String result = gridController.updateBoxes().toString();
+        
+        hierarchicalResult.setText("HierarchicalGrids collision detection -> Collided boxes: "+result);
     }
     /*
     Implementation of Naive n^2 broad phase collision detection  algorithm
     */
     public void naiveCollisionDetection(){
+        ArrayList<Collision> result = new ArrayList<>();
         
         for (int i = 0; i<boxes.size(); i++){
             AABB b1 = boxes.get(i);
-            boolean collision = false;
             for (int j = 0; j<boxes.size(); j++){
-                if (i != j){
+                if (i < j){
                     
                     AABB b2 = boxes.get(j);
                     
@@ -94,18 +128,17 @@ public class Surface extends Pane{
                             b1.getPosition().getX()+b1.getW() >= b2.getPosition().getX() &&
                             b1.getPosition().getY() <= b2.getPosition().getY()+b2.getH() &&
                             b1.getPosition().getY()+b1.getH() >= b2.getPosition().getY()){
-                        b1.changeColor(Color.RED);
-                        collision = true;
+                        result.add(new Collision(b1.getID(), b2.getID()));
                     }                   
                     
                 }
                 
             }
-            if (!collision){
-                b1.changeColor(Color.BLUE);
-            }
+            
             
         }
+       
+        naiveResult.setText("Naive collision detection -> Collided boxes: "+result.toString());
     }
     
     

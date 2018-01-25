@@ -44,11 +44,16 @@ public class GridController {
     /*
     Updates all AABB boxes 
     */
-    public void updateBoxes(){
+    public ArrayList<Collision> updateBoxes(){
+        ArrayList<Collision> collided = new ArrayList<>();
         for(Collision c:PairManagement.getPairs()){
             AABB b1 = boxesMap.get(c.getBoxes()[0]);
             AABB b2 = boxesMap.get(c.getBoxes()[1]);
-            intersects(b1, b2);
+            
+            if(intersects(b1, b2)){
+                collided.add(c);
+                
+            }
             
         }
         
@@ -57,10 +62,7 @@ public class GridController {
         
         removeBoxes();
         addBoxes();
-        /*
-        System.out.println(this);
-        System.out.println(collisions);
-        */
+        return collided;
     }
     
     /*
@@ -73,7 +75,7 @@ public class GridController {
                             b1.getPosition().getY()+b1.getH() >= b2.getPosition().getY()){
                         //b1.changeColor(Color.RED);
                         //b2.changeColor(Color.RED);
-                        System.out.println(b1+" "+b2);
+                        //System.out.println(b1+" "+b2);
                         return true;
                         
         }

@@ -4,6 +4,11 @@ import javafx.animation.Timeline;
 import javafx.application.Application;
 import static javafx.application.Application.launch;
 import javafx.scene.Scene;
+import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
@@ -23,11 +28,10 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         
         
-       
         
-        Surface surcafe = new Surface(1500,800);
+        Surface surface = new Surface(1500,700);
         
-        Scene scene = new Scene(surcafe, surcafe.getW(), surcafe.getH());
+        Scene scene = new Scene(surface, 1500, 800);
         
         primaryStage.setTitle("Hierarchical Grids");
         primaryStage.setScene(scene);
@@ -35,7 +39,7 @@ public class Main extends Application {
         
         
         Timeline animation = new Timeline(new KeyFrame(Duration.millis(20), e -> {
-			surcafe.draw();
+			surface.draw();
 		}));
 	animation.setCycleCount(Timeline.INDEFINITE);
 	animation.play();

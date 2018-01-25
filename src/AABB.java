@@ -98,7 +98,7 @@ public class AABB extends Pane{
         
         Rectangle rectangle = new Rectangle(position.getX(),position.getY(),this.width,this.height);
         rectangle.setFill(this.color);
-        Text t = new Text(position.getX(),position.getY(), id+" "+width+" "+height);
+        Text t = new Text(position.getX()+width/2-10,position.getY()+height/2+10, id+"");
         t.setFont(new Font(20));
         
         getChildren().addAll(rectangle,t);
