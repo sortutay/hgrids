@@ -10,10 +10,10 @@
 
 ### Implement naive n^2 broad phase collision detection ✔
 
-#### Implement hierarchical grid broad phase (AddBox, RemoveBox, UpdateBox)
+#### Implement hierarchical grid broad phase (AddBox, RemoveBox, UpdateBox) ✔
 
-#### Grids are stored by spatial hashing in hash tables
+#### Grids are stored by spatial hashing in hash tables ✔
 
-#### Compare results (pairs) and times of both algorithms
+#### Compare results (pairs) and times of both algorithms ✔
 
-#### Implement simple (full matrix) pair management
+#### Implement simple (full matrix) pair management ✔
